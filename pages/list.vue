@@ -1,13 +1,18 @@
 <template>
     <div>
         <h2>Hello Foods!</h2>
-        <div>
-            食品名:<input v-model='name'/>/種類:<input v-model='category'/>/五味:<input v-model='fiveFlavors'/>/五性:<input v-model='五性'/>/体質:<input v-model='constitution'/>
-            <button @click='addFoods'> Add Foods </button>
-        </div>
+        <nuxt-link to="/listEdit">Go to Editer</nuxt-link>
+        <hr>
         <ul>
             <li v-for='(food,idx) in foods' :key='idx'>
-                <span>{{ food.id }} : {{ food.name }} {{ food.category }}　{{ food.fiveFlavors }}　{{ food.五性 }} {{ food.constitution }}</span>
+                <span v-for='file in food.files' :key='`file-${file}`'>
+                    <template v-if='file.indexOf("foods/") >= 0'>
+                        <cloud-storage-image :filePath='file'/>
+                    </template>
+                    <span v-else v-html='file'>
+                    </span>
+                </span>
+                <span>{{ food.id }} : {{ food.name }} {{ food.category }}　{{ food.fiveFlavors }}　{{ food.fiveNature }} {{ food.constitution }}</span>
                 <button @click='deleteFoods(food)'> Delete </button>
             </li>
         </ul>
@@ -18,15 +23,22 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import firebase from '@/plugins/firebase'
+import CloudStorageImage from '@/components/CloudStorageImage.vue'
 export default {
+    components: {
+        CloudStorageImage
+    },
     data() {
         return {
             foods:[],
-            name: undefined,
-            category: undefined,
-            foveFlavors: undefined,
-            五性: undefined,
-            constitution: undefined
+            name: '',
+            category: '',
+            fiveFlavors: {},
+            fiveNature: {},
+            constitution: {},
+            files: [],
+            amazonLink:''
         }
     },
     async mounted() {
@@ -44,21 +56,6 @@ export default {
                 obj['id'] = doc.id
                 this.foods.push(obj)
             })  
-        },
-        async addFoods() {
-            console.log(this.name, this.category)
-            const ref = this.$store.getters['foods/getFoodsRef']
-            const food = ref.doc()
-            console.log(food.id)
-            await food.set({
-                name: this.name, 
-                category: this.category,
-                fiveFlavors: this.fiveFlavors,
-                五性: this.五性,
-                constitution: this.constitution
-            })
-            //update view
-            this.loadFoods()
         },
         async deleteFoods(food) {
             console.log(food)

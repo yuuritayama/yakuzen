@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Hello Foods!</h2>
-        <nuxt-link to="/listEdit">Go to Editer</nuxt-link>
+        <nuxt-link to="/foods/edit">Go to Editer</nuxt-link>
         <hr>
         <ul>
             <li v-for='(food,idx) in foods' :key='idx'>
@@ -13,6 +13,7 @@
                     </span>
                 </span>
                 <span>{{ food.id }} : {{ food.name }} {{ food.category }}　{{ food.fiveFlavors }}　{{ food.fiveNature }} {{ food.constitution }}</span>
+                <nuxt-link :to='`/foods/edit/${food.id}`'><button> Edit </button></nuxt-link>
                 <button @click='deleteFoods(food)'> Delete </button>
             </li>
         </ul>
@@ -31,14 +32,7 @@ export default {
     },
     data() {
         return {
-            foods:[],
-            name: '',
-            category: '',
-            fiveFlavors: {},
-            fiveNature: {},
-            constitution: {},
-            files: [],
-            amazonLink:''
+            foods:[]
         }
     },
     async mounted() {
@@ -62,9 +56,9 @@ export default {
             const ref = this.$store.getters['foods/getFoodsRef']
             const foodRef = ref.doc(food.id)
             console.log(foodRef)
-            foodRef.delete()
+            await foodRef.delete()
             //update view
-            this.loadFoods()
+            await this.loadFoods()
         }
     }
 }

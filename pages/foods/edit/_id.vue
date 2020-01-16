@@ -1,30 +1,30 @@
 <template>
     <div>
         <h2>Hello Editer!</h2>
-        <nuxt-link to="/list">Go to List</nuxt-link>
+        <nuxt-link to="/foods">Go to List</nuxt-link>
         <div>
-            食品名:<input v-model='name'/>/種類:<input v-model='category'/>
+            食品名:<input v-model='food.name'/>/種類:<input v-model='food.category'/>
         </div>
         <div>
             <div>五味</div>
             <div>
-                <template v-for='(val, key) in fiveFlavorsMap'>
-                    <input :id='key' :key='input-key' v-model='fiveFlavors[key]' type='checkbox'>
-                    <label :for='key' :key='label-key'>{{ val }}</label>
+                <template v-for='(val, key) in food.fiveFlavors'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.fiveFlavors[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ fiveFlavorsMap[key] }}</label>
                 </template>
             </div>
             <div>五性</div>
             <div>
-                <template v-for='(val, key) in fiveNatureMap'>
-                    <input :id='key' :key='input-key' v-model='fiveNature[key]' type='checkbox'>
-                    <label :for='key' :key='label-key'>{{ val }}</label>
+                <template v-for='(val, key) in food.fiveNature'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.fiveNature[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ fiveNatureMap[key] }}</label>
                 </template>
             </div>
             <div>体質</div>
             <div>
-                <template v-for='(val, key) in constitutionMap'>
-                    <input :id='key' :key='input-key' v-model='constitution[key]' type='checkbox'>
-                    <label :for='key' :key='label-key'>{{ val }}</label>
+                <template v-for='(val, key) in food.constitution'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.constitution[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ constitutionMap[key] }}</label>
                 </template>
             </div>
         </div>
@@ -37,9 +37,9 @@
             <button @click='onAddAmazonLink'> Add </button>
         </div>
         <div>
-            <button @click='addFoods'> Add Foods </button>
+            <button @click='addFood'> Add Foods </button>
         </div>
-        <div>{{files}}</div>
+        <div>{{food.files}}</div>
     </div>
 </template>
 
@@ -53,13 +53,7 @@ export default {
     },
     data() {
         return {
-            foods:[],
-            name: '',
-            category: '',
-            fiveFlavors: {},
-            fiveNature: {},
-            constitution: {},
-            files: [],
+            food: {},
             amazonLink:''
         }
     },
@@ -76,7 +70,7 @@ export default {
         fiveNatureMap() {
             return {
                 veryCold: '寒性',
-                cold: '冷製',
+                cold: '冷性',
                 nomal: '平性',
                 hot: '温性',
                 veryHot: '熱性'
@@ -93,36 +87,41 @@ export default {
         }
     },
     async mounted() {
-        await this.loadFoods()
+        await this.loadFood(this.$route.params.id)
     },
     methods: {
-        async loadFoods() {
-            const ref = this.$store.getters['foods/getFoodsRef']
-            const foods = await ref.get()
-            this.foods = []
-            foods.forEach(doc => {
-                console.log(doc.data())
-                console.log(doc.id)
-                const obj = doc.data()
-                obj['id'] = doc.id
-                this.foods.push(obj)
-            })  
+        toMap(obj){
+            return Object.keys(obj).reduce((r, c) => {
+                r[c] = false
+                return r
+            }, {})
         },
-        async addFoods() {
+        async loadFood(id) {
             console.log(this.name, this.category)
             const ref = this.$store.getters['foods/getFoodsRef']
-            const food = ref.doc()
-            console.log(food.id)
-            await food.set({
-                name: this.name, 
-                category: this.category,
-                fiveFlavors: this.fiveFlavors,
-                fiveNature: this.fiveNature,
-                constitution: this.constitution,
-                files: this.files
-            })
+            const foodRef = id ? await ref.doc(id).get() : {exists: false}
+            if (foodRef.exists) {
+                console.log(foodRef.data())
+                this.food = foodRef.data()
+            } else {
+                this.food = {
+                    name: '', 
+                    category: '',
+                    fiveFlavors: this.toMap(this.fiveFlavorsMap),
+                    fiveNature: this.toMap(this.fiveNatureMap),
+                    constitution: this.toMap(this.constitutionMap),
+                    files: []
+                }
+            }
+        },
+        async addFood() {
+            console.log(this.name, this.category)
+            const ref = this.$store.getters['foods/getFoodsRef']
+            const foodRef = this.$route.params.id ? ref.doc(this.$route.params.id) : ref.doc()
+            await foodRef.set(this.food)
             //update view
-            this.loadFoods()
+            await this.loadFood(foodRef.id)
+            this.$router.replace({params: {id: foodRef.id}})
         },
         async onFileSelected(e) {
             console.log(e)
@@ -130,20 +129,19 @@ export default {
             const files = e.target.files
             console.log(files)
 
-            this.files.length = 0
             const storageRef = firebase.storage().ref()
             for(let file of files) {
                 console.log(file)
                 const filename = `foods/${file.name}`
                 const fileRef = storageRef.child(filename)
                 await fileRef.put(file)
-                this.files.push(filename)
+                this.food.files.push(filename)
                 console.log(await fileRef.getDownloadURL())
             }
         },
         onAddAmazonLink() {
             if(this.amazonLink.trim().length > 0) {
-                this.files.push(this.amazonLink.trim())
+                this.food.files.push(this.amazonLink.trim())
             }
         }
     }

@@ -28,7 +28,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/firebase'
+    '~/plugins/firebase',
+    { src: '~/plugins/vue-good-table', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules

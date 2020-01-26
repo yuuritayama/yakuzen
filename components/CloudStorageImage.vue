@@ -1,5 +1,5 @@
 <template>
-  <img :src='url' width='100px'>
+  <img :src='url' width='100%'>
 </template>
 <script>
 import firebase from '@/plugins/firebase'

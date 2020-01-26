@@ -2,41 +2,81 @@
     <div>
         <h2>Hello Editer!</h2>
         <nuxt-link to="/foods">Go to List</nuxt-link>
+        <div class="item">食品名:<input v-model='food.name'/></div>
         <div>
-            食品名:<input v-model='food.name'/>/種類:<input v-model='food.category'/>
-        </div>
-        <div>
-            <div>五味</div>
+             <div class="item">種類</div>
+            <div>
+                <template v-for='(val, key) in food.category'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.category[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ categoryMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">五味</div>
             <div>
                 <template v-for='(val, key) in food.fiveFlavors'>
                     <input :id='key' :key='`input-${key}`' v-model='food.fiveFlavors[key]' type='checkbox'>
                     <label :for='key' :key='`label-${key}`'>{{ fiveFlavorsMap[key] }}</label>
                 </template>
             </div>
-            <div>五性</div>
+            <div class="item">五性</div>
             <div>
                 <template v-for='(val, key) in food.fiveNature'>
                     <input :id='key' :key='`input-${key}`' v-model='food.fiveNature[key]' type='checkbox'>
                     <label :for='key' :key='`label-${key}`'>{{ fiveNatureMap[key] }}</label>
                 </template>
             </div>
-            <div>体質</div>
+            <div class="item">中医学的体質</div>
             <div>
-                <template v-for='(val, key) in food.constitution'>
-                    <input :id='key' :key='`input-${key}`' v-model='food.constitution[key]' type='checkbox'>
-                    <label :for='key' :key='`label-${key}`'>{{ constitutionMap[key] }}</label>
+                <template v-for='(val, key) in food.constitutions'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.constitutions[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ constitutionsMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">ドーシャへの作用</div>
+            <div>
+                <template v-for='(val, key) in food.effectToDosha'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.effectToDosha[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ effectToDoshaMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">グナ（性質）</div>
+            <div>
+                <template v-for='(val, key) in food.guna'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.guna[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ gunaMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">ラサ（味）</div>
+            <div>
+                <template v-for='(val, key) in food.lasa'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.lasa[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ lasaMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">ヴィールヤ（薬力源）</div>
+            <div>
+                <template v-for='(val, key) in food.virya'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.virya[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ viryaMap[key] }}</label>
+                </template>
+            </div>
+            <div class="item">ヴィパーカ（消化後の味）</div>
+            <div>
+                <template v-for='(val, key) in food.vipaka'>
+                    <input :id='key' :key='`input-${key}`' v-model='food.vipaka[key]' type='checkbox'>
+                    <label :for='key' :key='`label-${key}`'>{{ vipakaMap[key] }}</label>
                 </template>
             </div>
         </div>
-        <div>
+        <div class="item">
             <input type="file" multiple="multiple" @change='onFileSelected'>
             <input type="reset">
         </div>
-        <div>
+        <div class="item">
             <textarea cols='60' rows='5' v-model='amazonLink'></textarea>
             <button @click='onAddAmazonLink'> Add </button>
         </div>
-        <div>
+        <div class="item">
             <button @click='addFood'> Add Foods </button>
         </div>
         <div>{{food.files}}</div>
@@ -47,57 +87,23 @@
 import { mapGetters, mapActions } from 'vuex'
 import firebase from '@/plugins/firebase'
 import CloudStorageImage from '@/components/CloudStorageImage.vue'
+import ElementNameMixin from '@/mixins/ElementNameMixin.vue'
 export default {
     components: {
         CloudStorageImage
     },
+    mixins: [ElementNameMixin],
     data() {
         return {
             food: {},
             amazonLink:''
         }
     },
-    computed: {
-        fiveFlavorsMap() {
-            return {
-                bitter: '苦味',
-                salty: '鹹味',
-                sour: '酸味',
-                spicy: '辛味',
-                sweet: '甘味'
-            }
-        },
-        fiveNatureMap() {
-            return {
-                veryCold: '寒性',
-                cold: '冷性',
-                nomal: '平性',
-                hot: '温性',
-                veryHot: '熱性'
-            }
-        },
-        constitutionMap() {
-            return {
-                qiDeficiency: '気虚',
-                qiStagnation: '気滞',
-                bloodDeficiency: '血虚',
-                bloodStasis: '瘀血',
-                fluidRetention: '水滞'
-            }
-        }
-    },
     async mounted() {
         await this.loadFood(this.$route.params.id)
     },
     methods: {
-        toMap(obj){
-            return Object.keys(obj).reduce((r, c) => {
-                r[c] = false
-                return r
-            }, {})
-        },
         async loadFood(id) {
-            console.log(this.name, this.category)
             const ref = this.$store.getters['foods/getFoodsRef']
             const foodRef = id ? await ref.doc(id).get() : {exists: false}
             if (foodRef.exists) {
@@ -106,16 +112,20 @@ export default {
             } else {
                 this.food = {
                     name: '', 
-                    category: '',
+                    category: this.toMap(this.categoryMap),
                     fiveFlavors: this.toMap(this.fiveFlavorsMap),
                     fiveNature: this.toMap(this.fiveNatureMap),
-                    constitution: this.toMap(this.constitutionMap),
+                    constitutions: this.toMap(this.constitutionsMap),
+                    effectToDosha: this.toMap(this.effectToDoshaMap),
+                    guna: this.toMap(this.gunaMap),
+                    lasa: this.toMap(this.lasaMap),
+                    virya: this.toMap(this.viryaMap),
+                    vipaka: this.toMap(this.vipakaMap),
                     files: []
                 }
             }
         },
         async addFood() {
-            console.log(this.name, this.category)
             const ref = this.$store.getters['foods/getFoodsRef']
             const foodRef = this.$route.params.id ? ref.doc(this.$route.params.id) : ref.doc()
             await foodRef.set(this.food)
@@ -147,3 +157,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.item {
+    font-size: 18px;
+    margin: 10px 0 0 0;
+}
+</style>

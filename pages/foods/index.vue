@@ -2,17 +2,14 @@
     <div>
         <h2>Hello Foods!</h2>
         <nuxt-link to="/foods/edit">Go to Editer</nuxt-link>
+        <nuxt-link to="/foods/table">Go to Table</nuxt-link>
         <hr>
         <ul>
             <li v-for='(food,idx) in foods' :key='idx'>
-                <span v-for='file in food.files' :key='`file-${file}`'>
-                    <template v-if='file.indexOf("foods/") >= 0'>
-                        <cloud-storage-image :filePath='file'/>
-                    </template>
-                    <span v-else v-html='file'>
-                    </span>
+                <span class='list-block' v-for='src in food.files' :key='`file-${src}`'>
+                    <food-image :src='src'/>
                 </span>
-                <span>{{ food.id }} : {{ food.name }} {{ food.category }}　{{ food.fiveFlavors }}　{{ food.fiveNature }} {{ food.constitution }}</span>
+                <span>{{ food.id }} : {{ food.name }} {{ food.category }}　{{ food.fiveFlavors }}　{{ food.fiveNature }} {{ food.constitutions }} {{ food.effectToDosha }} {{ food.guna }}</span>
                 <nuxt-link :to='`/foods/edit/${food.id}`'><button> Edit </button></nuxt-link>
                 <button @click='deleteFoods(food)'> Delete </button>
             </li>
@@ -25,10 +22,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import firebase from '@/plugins/firebase'
-import CloudStorageImage from '@/components/CloudStorageImage.vue'
+import FoodImage from '@/components/FoodImage.vue'
 export default {
     components: {
-        CloudStorageImage
+        FoodImage
     },
     data() {
         return {
@@ -63,3 +60,13 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.list-block {
+    display: inline-block;
+}
+
+.list-block /deep/ img {
+    max-width: 100px;
+}
+</style>

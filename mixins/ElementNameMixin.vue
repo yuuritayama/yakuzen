@@ -6,6 +6,7 @@ export default {
             return {
                 vegetable: '野菜',
                 fluit: '果物',
+                protein: '肉・魚介',
                 dryFood: '乾物',
                 spice: 'スパイス',
                 herb: 'ハーブ',

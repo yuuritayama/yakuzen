@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Hello Editer!</h2>
-        <nuxt-link to="/foods">Go to List</nuxt-link>
+        <nuxt-link to="/foods/list">Go to List</nuxt-link>
         <div class="item">食品名:<input v-model='food.name'/></div>
         <div>
              <div class="item">種類</div>

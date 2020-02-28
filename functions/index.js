@@ -15,19 +15,19 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
  response.send("Hello from Firebase!");
 });
 
+// collection fooods から collection constitutions_index を作成
 exports.update = functions.firestore.document('foods/{id}').onWrite(
     async (snap, context) => {
         const newValue = snap.after.data(); // 更新後のデータ
         const previousValue = snap.before.data(); // 更新前のデータ
-        console.log(newValue, previousValue)
-        console.log(newValue.constitutions, newValue['constitutions'])
-
+        
         const constitutionsIndexRef = firestore.collection('constitutions_index')
         for(const [key, value] of Object.entries(newValue.constitutions)) {
-            console.log(key, value)
-            const res = await constitutionsIndexRef.doc(`${key}_${value}`).set({
+            const foodsId = firestore.collection('foods').doc(context.params.id).path.replace('/', '_')
+            const res = await constitutionsIndexRef.doc(`${key}`).collection(`_${value}`).doc(foodsId).set({
                 foodRef: firestore.collection('foods').doc(context.params.id)
             })
+            await constitutionsIndexRef.doc(`${key}`).collection(`_${!value}`).doc(foodsId).delete()
         }
         return true  
     }

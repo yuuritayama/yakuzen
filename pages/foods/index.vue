@@ -2,23 +2,18 @@
     <div>
         <Header />
         <nuxt-link to="/foods/list">List</nuxt-link>
-        <h2>中医学・アーユルヴェーダ食材効能一覧</h2>
+        <h2>中医学食材効能一覧</h2>
         <input v-model="searchWord">
-        <button @click='search(searchWord)'>検索</button>
-        <table border="1">
+        <a class="btn" @click='search(searchWord)'>検索</a>
+        <table class="foods-table">
             <thead>
                  <tr>
-                    <th>Image</th>
+                    <th></th>
                     <th>食品名</th>
                     <th>種類</th>
                     <th>五味</th>
                     <th>五性</th>
-                    <th>中医学的体質</th>
-                    <th>ドーシャへの作用</th>
-                    <th>性質（グナ）</th>
-                    <th>味（ラサ）</th>
-                    <th>薬力源（ヴィールヤ）</th>
-                    <th>消化後の味（ヴィパーカ）</th>
+                    <th>体質</th>
                  </tr>
             </thead>
             <tbody>
@@ -28,80 +23,46 @@
                             <food-image :src='src'/>
                         </span>
                     </td>
-                    <td>
+                    <td data-label="食品名">
                         <nuxt-link :to='`/foods/${food.id}`'>
                             {{ food.name }}
                         </nuxt-link>
                     </td>
-                    <td>
+                    <td data-label="種類">
                         <template v-for='(val, key) in food.category'>
                             <div v-if='val'>
                                 {{ categoryMap[key] }}
                             </div>
                         </template>
                     </td>
-                    <td>
+                    <td data-label="五味">
                         <template v-for='(val, key) in food.fiveFlavors'>
                             <div v-if='val'>
                                 {{ fiveFlavorsMap[key] }}
                             </div>
                         </template>
                     </td>
-                    <td>
+                    <td data-label="五性">
                         <template v-for='(val,key) in food.fiveNature'>
                             <div v-if='val'>
                                 {{ fiveNatureMap[key] }}
                             </div>
                         </template>
                     </td>
-                    <td>
+                    <td data-label="体質">
                         <template v-for='(val,key) in food.constitutions'>
                             <div v-if='val'>
                                 {{ constitutionsMap[key] }}
                             </div>
                         </template>
                     </td>
-                    <td>
-                        <template v-for='(val, key) in food.effectToDosha'>
-                            <div v-if='val'>
-                                {{ effectToDoshaMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td>
-                        <template v-for='(val, key) in food.guna'>
-                            <div v-if='val'>
-                                {{ gunaMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td>
-                        <template v-for='(val, key) in food.lasa'>
-                            <div v-if='val'>
-                                {{ lasaMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td>
-                        <template v-for='(val, key) in food.virya'>
-                            <div v-if='val'>
-                                {{ viryaMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td>
-                        <template v-for='(val, key) in food.vipaka'>
-                            <div v-if='val'>
-                                {{ vipakaMap[key] }}
-                            </div>
-                        </template>
-                    </td>
                 </tr>
                 <tr><td colspan='11'>
-                    <button @click='loadMore'>もっと見る</button>
+                    <a class="btn" @click='loadMore'>もっと見る</a>
                 </td></tr>
             </tbody>
         </table>
+        <Footer />
     </div>
 </template>
 
@@ -110,12 +71,15 @@ import { mapGetters, mapActions } from 'vuex'
 import firebase from '@/plugins/firebase'
 import FoodImage from '@/components/FoodImage.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+
 
 import ElementNameMixin from '@/mixins/ElementNameMixin.vue'
 export default {
     components: {
         FoodImage,
-        Header
+        Header,
+        Footer
     },
     mixins: [ElementNameMixin],
     data(){
@@ -177,6 +141,114 @@ export default {
 }
 
 .list-block /deep/ img {
-    max-width: 150px;
+    max-width: 100px;
 }
+
+table {
+    width: 100%
+}
+
+/* input */
+input {
+    border: solid 1px #00bcd4;
+}
+
+/* button */
+.btn {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  color: #00BCD4;
+  background: #ECECEC;
+  transition: .4s;
+}
+
+.btn:hover {
+  background: #00bcd4;
+  color: white;
+}
+
+
+/***　おしゃれテーブル4 マゼンダカラー 　***/
+/* https://ganchan.info/archives/2811/2 */
+.foods-table {
+ width:100%;
+ border-collapse: separate; 
+ border: none;
+ border-spacing: 0px 10px ;
+}
+
+.foods-table tbody td, 
+.foods-table tfoot td {
+ text-align: center;
+}
+
+/* 上部ヘッダー（背景：パステルカラー） */
+.foods-table thead th {
+ color: #FFF; 
+ font-weight: bold;
+ background:#E91E63;
+}
+
+/* 上部ヘッダーの丸み */
+.foods-table thead th:nth-child(2) {
+ border-radius: 10px 0 0 0;
+}
+.foods-table thead th:last-child  {
+ border-radius: 0 10px  0 0;
+}
+
+.foods-table th,
+.foods-table td {
+ border: 0 none !important;
+}
+
+/* ヘッダーセル先頭・ボディ項目・フッター項目 */
+.foods-table tbody th,
+.foods-table tfoot th,
+.foods-table thead th:first-child {
+ background:none;
+ color:#666;
+ font-weight: bold;
+ line-height:4.5em;
+ text-align:right;
+}
+
+/* ここからコピペ　https://b-risk.jp/blog/2018/07/table-css/ */
+.foods-table td:first-child {
+  background: #fbf5f5;
+}
+
+/* mobile */
+@media screen and (max-width: 640px) {
+    .foods-table {
+        width: 80%;
+    }
+    .foods-table thead {
+        display: none;
+    }
+    .foods-table tr {
+        width: 100%;
+    }
+    .foods-table td {
+        display: block;
+        text-align: right;
+        width: 100%;
+    }
+    .foods-table td:first-child {
+        background: #e9727e;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+    }
+    .foods-table td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+}
+
 </style>

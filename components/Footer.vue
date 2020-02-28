@@ -6,7 +6,7 @@
 
 <style scoped>
 .footerParentContainer {
-    background-color: #93b881;
+    background-color: #b9d08b;
     color: #f8f4e6;
 }
 </style>

@@ -38,6 +38,7 @@
                 </div>
             </template>
         </div>
+        <Footer />
     </div>
 </template>
 
@@ -46,12 +47,14 @@ import { mapGetters, mapActions } from 'vuex'
 import firebase from '@/plugins/firebase'
 import FoodImage from '@/components/FoodImage.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 import ElementNameMixin from '@/mixins/ElementNameMixin.vue'
 
 export default {
     components: {
         FoodImage,
-        Header
+        Header,
+        Footer
     },
     mixins: [ElementNameMixin],
     data() {

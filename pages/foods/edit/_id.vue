@@ -2,6 +2,7 @@
     <div>
         <h2>Hello Editer!</h2>
         <nuxt-link to="/foods/list">Go to List</nuxt-link>
+        <nuxt-link to="/foods/edit">Go to Editer</nuxt-link>
         <div class="item">食品名:<input v-model='food.name'/></div>
         <div>
              <div class="item">種類</div>
@@ -80,6 +81,10 @@
             <button @click='addFood'> Add Foods </button>
         </div>
         <div>{{food.files}}</div>
+        <div>
+            <nuxt-link to="/foods/list">Go to List</nuxt-link>
+            <nuxt-link to="/foods/edit">Go to Editer</nuxt-link>
+        </div>
     </div>
 </template>
 

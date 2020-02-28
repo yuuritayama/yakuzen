@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header />
-        <div class="parentContainer">
+        <div class="ccParentContainer">
             <h2>体質チェッカー</h2>
             <div class="checkContainer">
                 <h3>気虚</h3>
@@ -150,15 +150,18 @@
                 水滞 {{checkedFluidRetention.length}} 点
             </div>
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
     components: {
-        Header
+        Header,
+        Footer
     },
     data() {
         return {
@@ -177,12 +180,14 @@ ul {
   list-style: none;
 }
 
-.parentContainer{
+.ccParentContainer{
     text-align: center;
+    background-color: #f9f9f7;
 }
 
 .checkContainer {
     display: inline-block;
+    background-color: #c8d8a8;
     text-align: center;
     box-sizing: border-box;
     width: 80%;

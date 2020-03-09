@@ -1,6 +1,6 @@
 <template>
     <div class="footerParentContainer">
-        footer
+        by momoyama mofufu
     </div>
 </template>
 

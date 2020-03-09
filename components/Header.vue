@@ -3,7 +3,7 @@
         <h1 class="title"><nuxt-link to="/">ゆるゆる薬膳</nuxt-link></h1>
         <div class="header-nav">
             <ul>
-                <li class="nav-menu"><nuxt-link to="">このサイトについて</nuxt-link></li>
+                <!-- <li class="nav-menu"><nuxt-link to="">このサイトについて</nuxt-link></li> -->
                 <li class="nav-menu"><nuxt-link to="/foods">食材効能一覧</nuxt-link></li>
                 <li class="nav-menu"><nuxt-link to="/constitutionsChecker">体質チェッカー</nuxt-link></li>
                 <li class="nav-menu"><nuxt-link to="/soup">薬膳スープジェネレーター</nuxt-link></li>
@@ -15,7 +15,6 @@
             <label class="nav-unshown" id="nav-close" for="nav-input"></label>
             <div id="nav-content">
                 <ul>
-                    <li>このサイトについて</li>
                     <li><nuxt-link to="/foods">食材効能一覧</nuxt-link></li>
                     <li><nuxt-link to="/constitutionsChecker">体質チェッカー</nuxt-link></li>
                     <li><nuxt-link to="/soup">薬膳スープジェネレーター</nuxt-link></li>
@@ -59,7 +58,7 @@ ul {
 }
 
 .header-nav {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .nav-menu {
@@ -113,7 +112,7 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background: black;
+  background: #302833;
   opacity: 0;
   transition: .3s ease-in-out;
 }
@@ -128,7 +127,7 @@ ul {
   width: 90%;/*右側に隙間を作る（閉じるカバーを表示）*/
   max-width: 330px;/*最大幅（調整してください）*/
   height: 100%;
-  background: #b9d08b;/*背景色*/
+  background: #c8d8a8;/*背景色*/
   transition: .3s ease-in-out;/*滑らかに表示*/
   -webkit-transform: translateX(-105%);
   transform: translateX(-105%);/*左に隠しておく*/
@@ -147,13 +146,13 @@ ul {
 }
 
 // responsibe
-@media screen and (min-width:550px) { /*480に戻す*/
+@media screen and (min-width:640px) { 
   #nav-open {
     display:none;
   }
 }
 
-@media screen and (max-width:550px) { /*480に戻す*/
+@media screen and (max-width:640px) { 
   .header-nav {
     display:none;
   }

@@ -1,40 +1,20 @@
 <template>
     <div class="topParentContainer">
         <Header />
-        <div class="menuContainer">
-            <div>
-                <img src="@/assets/image/top.jpg" />
-            </div>
-            <ul>
-                <li class="menu"><span>このサイトについて</span></li>
-                    <ul>
-                        <li class="menuDiscription">discription</li>
-                    </ul>
-                <li class="menu"><nuxt-link to="/foods">食材効能一覧</nuxt-link></li>
-                    <ul>
-                        <li>discription</li>
-                    </ul>
-                <li class="menu"><nuxt-link to="/constitutionsChecker">体質チェッカー</nuxt-link></li>
-                    <ul>
-                        <li>discription</li>
-                    </ul>
-                <li class="menu"><nuxt-link to="/soup">薬膳スープジェネレーター</nuxt-link></li>
-                    <ul>
-                        <li>discription</li>
-                    </ul>
-            </ul>
-        </div>
+        <HomeMenu />
         <Footer />
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
+import HomeMenu from '@/components/HomeMenu.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
     components: {
         Header,
+        HomeMenu,
         Footer
     }
 }
@@ -52,7 +32,7 @@ a {
 
 .topParentContainer {
     color: #302833;
-    background-color: #f9f9f7;
+    background-color: #fffbf7;
 }
 
 .menuContainer {
@@ -71,4 +51,12 @@ a {
     color: #302833
 }
 
+.color {
+    color: #f8f4e6;
+    color: #c8d8a8;
+    color: #fffbf7;
+    color: #302833;
+    color: #b9d08b;
+    color: #caa8d8;
+}
 </style>

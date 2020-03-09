@@ -2,66 +2,70 @@
     <div>
         <Header />
         <nuxt-link to="/foods/list">List</nuxt-link>
-        <h2>中医学食材効能一覧</h2>
-        <input v-model="searchWord">
-        <a class="btn" @click='search(searchWord)'>検索</a>
-        <table class="foods-table">
-            <thead>
-                 <tr>
-                    <th></th>
-                    <th>食品名</th>
-                    <th>種類</th>
-                    <th>五味</th>
-                    <th>五性</th>
-                    <th>体質</th>
-                 </tr>
-            </thead>
-            <tbody>
-                <tr v-for='(food,idx) in filteredFoods' :key='idx'>
-                    <td>
-                        <span class='list-block' v-for='src in food.files' :key='`file-${src}`'>
-                            <food-image :src='src'/>
-                        </span>
-                    </td>
-                    <td data-label="食品名">
-                        <nuxt-link :to='`/foods/${food.id}`'>
-                            {{ food.name }}
-                        </nuxt-link>
-                    </td>
-                    <td data-label="種類">
-                        <template v-for='(val, key) in food.category'>
-                            <div v-if='val'>
-                                {{ categoryMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td data-label="五味">
-                        <template v-for='(val, key) in food.fiveFlavors'>
-                            <div v-if='val'>
-                                {{ fiveFlavorsMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td data-label="五性">
-                        <template v-for='(val,key) in food.fiveNature'>
-                            <div v-if='val'>
-                                {{ fiveNatureMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                    <td data-label="体質">
-                        <template v-for='(val,key) in food.constitutions'>
-                            <div v-if='val'>
-                                {{ constitutionsMap[key] }}
-                            </div>
-                        </template>
-                    </td>
-                </tr>
-                <tr><td colspan='11'>
-                    <a class="btn" @click='loadMore'>もっと見る</a>
-                </td></tr>
-            </tbody>
-        </table>
+        <div class="foods-parent-container">
+            <h2>中医学食材効能一覧</h2>
+            <div class="foods-search">
+                <input v-model="searchWord">
+                <a class="btn" @click='search(searchWord)'>検索</a>
+            </div>
+            <table class="foods-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>食品名</th>
+                        <th>種類</th>
+                        <th>五味</th>
+                        <th>五性</th>
+                        <th>体質</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for='(food,idx) in filteredFoods' :key='idx'>
+                        <td>
+                            <span class='list-block' v-for='src in food.files' :key='`file-${src}`'>
+                                <food-image :src='src'/>
+                            </span>
+                        </td>
+                        <td data-label="食品名">
+                            <nuxt-link :to='`/foods/${food.id}`'>
+                                {{ food.name }}
+                            </nuxt-link>
+                        </td>
+                        <td data-label="種類">
+                            <template v-for='(val, key) in food.category'>
+                                <div v-if='val'>
+                                    {{ categoryMap[key] }}
+                                </div>
+                            </template>
+                        </td>
+                        <td data-label="五味">
+                            <template v-for='(val, key) in food.fiveFlavors'>
+                                <div v-if='val'>
+                                    {{ fiveFlavorsMap[key] }}
+                                </div>
+                            </template>
+                        </td>
+                        <td data-label="五性">
+                            <template v-for='(val,key) in food.fiveNature'>
+                                <div v-if='val'>
+                                    {{ fiveNatureMap[key] }}
+                                </div>
+                            </template>
+                        </td>
+                        <td data-label="体質">
+                            <template v-for='(val,key) in food.constitutions'>
+                                <div v-if='val'>
+                                    {{ constitutionsMap[key] }}
+                                </div>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr><td colspan='11'>
+                        <a class="btn" @click='loadMore'>もっと見る</a>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
         <Footer />
     </div>
 </template>
@@ -135,7 +139,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.foods-parent-container {
+    color: #302833;
+    background-color: #fffbf7;
+    text-align: center;
+    margin: 0 10%;
+}
+
+.foods-search{
+    text-align: right;
+}
+
 .list-block {
     display: inline-block;
 }
@@ -144,60 +159,67 @@ export default {
     max-width: 100px;
 }
 
-table {
-    width: 100%
+h2 {
+    text-align: center;
 }
 
-/* input */
+a {
+    color: #302833;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #caa8d8;
+}
+
 input {
-    border: solid 1px #00bcd4;
+    border: solid 1px #caa8d8;
 }
 
-/* button */
 .btn {
-  position: relative;
-  display: inline-block;
-  font-weight: bold;
-  padding: 0.25em 0.5em;
-  text-decoration: none;
-  color: #00BCD4;
-  background: #ECECEC;
-  transition: .4s;
-}
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.25em 0.5em;
+    text-decoration: none;
+    color: #302833;
+    background: #caa8d8;
+    transition: .4s;
+    }
 
 .btn:hover {
-  background: #00bcd4;
-  color: white;
+    background: #302833;
+    color: #f8f4e6;
 }
 
 
 /***　おしゃれテーブル4 マゼンダカラー 　***/
 /* https://ganchan.info/archives/2811/2 */
 .foods-table {
- width:100%;
- border-collapse: separate; 
- border: none;
- border-spacing: 0px 10px ;
+    width:100%;
+    border-collapse: separate; 
+    border: none;
+    border-spacing: 0px 10px ;
 }
 
 .foods-table tbody td, 
 .foods-table tfoot td {
- text-align: center;
+    text-align: center;
 }
 
-/* 上部ヘッダー（背景：パステルカラー） */
+/* 上部ヘッダー */
 .foods-table thead th {
- color: #FFF; 
- font-weight: bold;
- background:#E91E63;
+    color: #302833; 
+    font-weight: bold;
+    background:#c8d8a8;
 }
 
 /* 上部ヘッダーの丸み */
 .foods-table thead th:nth-child(2) {
- border-radius: 10px 0 0 0;
+    border-radius: 10px 0 0 0;
 }
 .foods-table thead th:last-child  {
- border-radius: 0 10px  0 0;
+    border-radius: 0 10px  0 0;
 }
 
 .foods-table th,
@@ -209,18 +231,16 @@ input {
 .foods-table tbody th,
 .foods-table tfoot th,
 .foods-table thead th:first-child {
- background:none;
- color:#666;
- font-weight: bold;
- line-height:4.5em;
- text-align:right;
+    background:none;
 }
+
+.foods-table td:first-child {
+    background-color: #c8d8a8;
+    width:200px;
+}
+
 
 /* ここからコピペ　https://b-risk.jp/blog/2018/07/table-css/ */
-.foods-table td:first-child {
-  background: #fbf5f5;
-}
-
 /* mobile */
 @media screen and (max-width: 640px) {
     .foods-table {
@@ -238,8 +258,9 @@ input {
         width: 100%;
     }
     .foods-table td:first-child {
-        background: #e9727e;
-        color: #fff;
+        background: #c8d8a8;
+        color: #f8f4e6;
+        width: 100%;
         font-weight: bold;
         text-align: center;
     }

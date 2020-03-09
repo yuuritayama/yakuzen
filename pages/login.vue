@@ -1,6 +1,10 @@
 <template>
     <div>
         <nuxt-link to="/foods">foods</nuxt-link>
+        <div>
+            <p>e-mail:<input v-model="email"/></p>
+            <p>password:<input v-model="password"/></p>
+        </div>
         <button @click="login">login</button>
         <button @click="logout">logout</button>
     </div>
@@ -11,13 +15,15 @@ import { firestoreAction } from 'vuexfire'
 import firebase from '@/plugins/firebase'
 
 export default {
+    data: {
+        email: '',
+        password: ''
+    },
     methods: {
         login() {
-            const email = 'michi.chou69@gmail.com'
-            const password = 'mametabi7746'
             firebase
                 .auth()
-                .signInWithEmailAndPassword(email, password)
+                .signInWithEmailAndPassword(this.email, this.password)
                 .catch(function(error) {
                     // Handle Errors here.
                     var errorCode = error.code
@@ -27,7 +33,10 @@ export default {
                 })
         },
         logout() {
-            firebase.auth().signOut().then(()=>{
+            firebase
+            .auth()
+            .signOut()
+            .then(()=>{
                 console.log("ログアウトしました")
             })
             .catch( (error)=>{
